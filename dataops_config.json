@@ -1,0 +1,35 @@
+{
+  "customer_analytics_pipeline": {
+    "name": "customer_analytics_pipeline",
+    "source_type": "csv",
+    "source_config": {
+      "file_path": "sample_customer_data.csv"
+    },
+    "transformations": [
+      {
+        "type": "remove_duplicates",
+        "subset": null
+      }
+    ],
+    "destination_type": "postgresql",
+    "destination_config": {
+      "type": "postgresql",
+      "host": "localhost",
+      "database": "analytics",
+      "table": "processed_customers"
+    },
+    "schedule": "@daily",
+    "quality_checks": [
+      {
+        "type": "unique",
+        "column": "customer_id"
+      },
+      {
+        "type": "email_validation",
+        "column": "email"
+      }
+    ],
+    "framework": "airflow",
+    "created_at": "2025-05-24T23:39:45.782437"
+  }
+}

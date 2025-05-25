@@ -1,0 +1,2356 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DataOps AI Pipeline Builder</title>
+    <style>
+        :root {
+            --primary-color: #2563eb;
+            --primary-hover: #1d4ed8;
+            --secondary-color: #64748b;
+            --success-color: #10b981;
+            --warning-color: #f59e0b;
+            --error-color: #ef4444;
+            --background: #f8fafc;
+            --surface: #ffffff;
+            --text-primary: #1e293b;
+            --text-secondary: #64748b;
+            --border: #e2e8f0;
+            --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+            --shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .header {
+            background: var(--surface);
+            border-bottom: 1px solid var(--border);
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .logo-icon {
+            width: 40px;
+            height: 40px;
+            background: linear-gradient(135deg, var(--primary-color), #3b82f6);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 18px;
+        }
+
+        .logo h1 {
+            font-size: 24px;
+            font-weight: 700;
+            color: var(--text-primary);
+        }
+
+        .nav-tabs {
+            display: flex;
+            gap: 24px;
+        }
+
+        .nav-tab {
+            padding: 8px 16px;
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            cursor: pointer;
+            border-radius: 6px;
+            transition: all 0.2s;
+            font-weight: 500;
+        }
+
+        .nav-tab:hover,
+        .nav-tab.active {
+            color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.1);
+        }
+
+        .main {
+            padding: 2rem 0;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .card {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 24px;
+            box-shadow: var(--shadow);
+            border: 1px solid var(--border);
+        }
+
+        .card-header {
+            margin-bottom: 20px;
+        }
+
+        .card-title {
+            font-size: 20px;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin-bottom: 8px;
+        }
+
+        .card-subtitle {
+            color: var(--text-secondary);
+            font-size: 14px;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-input,
+        .form-select,
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            font-size: 14px;
+            transition: all 0.2s;
+            background: var(--surface);
+        }
+
+        .form-input:focus,
+        .form-select:focus,
+        .form-textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+        }
+
+        .form-textarea {
+            resize: vertical;
+            min-height: 100px;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            text-decoration: none;
+            font-size: 14px;
+        }
+
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: var(--primary-hover);
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: var(--secondary-color);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #475569;
+        }
+
+        .btn-success {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .btn-warning {
+            background: var(--warning-color);
+            color: white;
+        }
+
+        .btn-danger {
+            background: var(--error-color);
+            color: white;
+        }
+
+        .btn-outline {
+            background: transparent;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+
+        .btn-outline:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .btn:disabled {
+            opacity: 0.6;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+
+        .status-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: 500;
+            text-transform: uppercase;
+        }
+
+        .status-success {
+            background: rgba(16, 185, 129, 0.1);
+            color: var(--success-color);
+        }
+
+        .status-warning {
+            background: rgba(245, 158, 11, 0.1);
+            color: var(--warning-color);
+        }
+
+        .status-error {
+            background: rgba(239, 68, 68, 0.1);
+            color: var(--error-color);
+        }
+
+        .status-info {
+            background: rgba(37, 99, 235, 0.1);
+            color: var(--primary-color);
+        }
+
+        .pipeline-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .pipeline-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            transition: all 0.2s;
+            cursor: pointer;
+        }
+
+        .pipeline-card:hover {
+            box-shadow: var(--shadow-lg);
+            transform: translateY(-2px);
+            border-color: var(--primary-color);
+        }
+
+        .pipeline-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 12px;
+        }
+
+        .pipeline-name {
+            font-weight: 600;
+            font-size: 16px;
+            margin-bottom: 4px;
+        }
+
+        .pipeline-framework {
+            font-size: 12px;
+            color: var(--text-secondary);
+            text-transform: uppercase;
+            font-weight: 500;
+        }
+
+        .pipeline-actions {
+            display: flex;
+            gap: 8px;
+        }
+
+        .icon-btn {
+            width: 32px;
+            height: 32px;
+            border: none;
+            background: transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s;
+            color: var(--text-secondary);
+        }
+
+        .icon-btn:hover {
+            background: var(--background);
+            color: var(--text-primary);
+        }
+
+        .pipeline-info {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 16px;
+        }
+
+        .info-item {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .info-label {
+            font-size: 12px;
+            color: var(--text-secondary);
+            margin-bottom: 2px;
+        }
+
+        .info-value {
+            font-weight: 500;
+            font-size: 14px;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: var(--background);
+            border-radius: 4px;
+            overflow: hidden;
+            margin: 12px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), #3b82f6);
+            transition: width 0.3s ease;
+        }
+
+        .alert {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid;
+        }
+
+        .alert-success {
+            background: rgba(16, 185, 129, 0.1);
+            border-color: var(--success-color);
+            color: #065f46;
+        }
+
+        .alert-warning {
+            background: rgba(245, 158, 11, 0.1);
+            border-color: var(--warning-color);
+            color: #92400e;
+        }
+
+        .alert-error {
+            background: rgba(239, 68, 68, 0.1);
+            border-color: var(--error-color);
+            color: #991b1b;
+        }
+
+        .alert-info {
+            background: rgba(37, 99, 235, 0.1);
+            border-color: var(--primary-color);
+            color: #1e40af;
+        }
+
+        .loading {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 40px;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 4px solid var(--border);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+
+        .recommendations-list {
+            list-style: none;
+            margin: 16px 0;
+        }
+
+        .recommendations-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: start;
+            gap: 8px;
+        }
+
+        .recommendations-list li:last-child {
+            border-bottom: none;
+        }
+
+        .rec-icon {
+            width: 16px;
+            height: 16px;
+            background: var(--warning-color);
+            border-radius: 50%;
+            flex-shrink: 0;
+            margin-top: 2px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+
+        .stat-card {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            text-align: center;
+        }
+
+        .stat-value {
+            font-size: 32px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin-bottom: 4px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .file-drop-zone {
+            border: 2px dashed var(--border);
+            border-radius: 8px;
+            padding: 40px 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.2s;
+            background: var(--background);
+        }
+
+        .file-drop-zone:hover,
+        .file-drop-zone.dragover {
+            border-color: var(--primary-color);
+            background: rgba(37, 99, 235, 0.05);
+        }
+
+        .file-drop-zone.dragover {
+            transform: scale(1.02);
+        }
+
+        .drop-zone-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .drop-zone-icon {
+            width: 48px;
+            height: 48px;
+            background: var(--primary-color);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 20px;
+        }
+
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+            backdrop-filter: blur(4px);
+        }
+
+        .modal.active {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .modal-content {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 24px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 80vh;
+            overflow-y: auto;
+            box-shadow: var(--shadow-lg);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .modal-title {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .close-btn {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            color: var(--text-secondary);
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+        }
+
+        .close-btn:hover {
+            background: var(--background);
+        }
+
+        @media (max-width: 768px) {
+            .nav-tabs {
+                display: none;
+            }
+
+            .form-row {
+                grid-template-columns: 1fr;
+            }
+
+            .pipeline-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        .code-block {
+            background: #1e293b;
+            color: #e2e8f0;
+            padding: 16px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            line-height: 1.5;
+            overflow-x: auto;
+            margin: 16px 0;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 12px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border);
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .copy-btn {
+            background: none;
+            border: 1px solid var(--border);
+            color: var(--text-secondary);
+            padding: 4px 8px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+        }
+
+        .copy-btn:hover {
+            background: var(--background);
+        }
+    </style>
+</head>
+
+<body>
+    <header class="header">
+        <div class="container">
+            <div class="header-content">
+                <div class="logo">
+                    <div class="logo-icon">AI</div>
+                    <h1>DataOps Pipeline Builder</h1>
+                </div>
+                <nav class="nav-tabs">
+                    <button class="nav-tab active" onclick="switchTab('create')">Create Pipeline</button>
+                    <button class="nav-tab" onclick="switchTab('pipelines')">My Pipelines</button>
+                    <button class="nav-tab" onclick="switchTab('validate')">Data Validation</button>
+                    <button class="nav-tab" onclick="switchTab('analytics')">Analytics</button>
+                </nav>
+            </div>
+        </div>
+    </header>
+
+    <main class="main">
+        <div class="container">
+            <!-- Create Pipeline Tab -->
+            <div id="create-tab" class="tab-content active">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Create AI-Powered Pipeline</h2>
+                        <p class="card-subtitle">Upload your data and let AI generate an optimized pipeline</p>
+                    </div>
+
+                    <form id="create-pipeline-form">
+                        <div class="form-group">
+                            <label class="form-label">Data Source</label>
+                            <div class="file-drop-zone" id="file-drop-zone">
+                                <div class="drop-zone-content">
+                                    <div class="drop-zone-icon">📄</div>
+                                    <div>
+                                        <strong>Drop your data file here</strong> or click to browse
+                                        <br><span style="color: var(--text-secondary); font-size: 12px;">Supports CSV,
+                                            JSON files</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <input type="file" id="data-file" accept=".csv,.json" style="display: none;">
+                        </div>
+
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Pipeline Name</label>
+                                <input type="text" class="form-input" id="pipeline-name"
+                                    placeholder="e.g., customer-analytics-pipeline" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Framework</label>
+                                <select class="form-select" id="framework">
+                                    <option value="airflow">Apache Airflow</option>
+                                    <option value="prefect">Prefect</option>
+                                    <option value="dbt">dbt</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                            <label class="form-label">Destination Configuration</label>
+                            <select class="form-select" id="dest-type" onchange="updateDestinationConfig()">
+                                <option value="csv">CSV File</option>
+                                <option value="postgresql">PostgreSQL</option>
+                                <option value="mysql">MySQL</option>
+                                <option value="bigquery">Google BigQuery</option>
+                            </select>
+                        </div>
+
+                        <div id="destination-config">
+                            <div class="form-group">
+                                <label class="form-label">Output File Path</label>
+                                <input type="text" class="form-input" id="dest-file-path"
+                                    placeholder="/path/to/output.csv" value="output.csv">
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="create-btn">
+                            <span>🚀</span> Create Pipeline
+                        </button>
+                    </form>
+                </div>
+
+                <div id="creation-results" style="display: none;"></div>
+            </div>
+
+            <!-- My Pipelines Tab -->
+            <div id="pipelines-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Pipeline Dashboard</h2>
+                        <p class="card-subtitle">Manage and monitor your AI-generated pipelines</p>
+                    </div>
+
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-pipelines">0</div>
+                            <div class="stat-label">Total Pipelines</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="active-pipelines">0</div>
+                            <div class="stat-label">Active Pipelines</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="total-transformations">0</div>
+                            <div class="stat-label">Transformations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" id="quality-checks">0</div>
+                            <div class="stat-label">Quality Checks</div>
+                        </div>
+                    </div>
+
+                    <div class="pipeline-grid" id="pipelines-grid">
+                        <!-- Pipelines will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Validation Tab -->
+            <div id="validate-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">AI Data Validation</h2>
+                        <p class="card-subtitle">Validate data quality using AI-powered analysis</p>
+                    </div>
+
+                    <form id="validate-form">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Select Pipeline</label>
+                                <select class="form-select" id="validation-pipeline" required>
+                                    <option value="">Choose a pipeline...</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Data File</label>
+                                <input type="file" class="form-input" id="validation-file" accept=".csv,.json" required>
+                            </div>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary">
+                            <span>🔍</span> Validate Data
+                        </button>
+                    </form>
+                </div>
+
+                <div id="validation-results" style="display: none;"></div>
+            </div>
+
+            <!-- Analytics Tab -->
+            <div id="analytics-tab" class="tab-content">
+                <div class="card">
+                    <div class="card-header">
+                        <h2 class="card-title">Pipeline Analytics</h2>
+                        <p class="card-subtitle">AI insights and performance metrics</p>
+                    </div>
+
+                    <div id="analytics-content">
+                        <div class="alert alert-info">
+                            <strong>Coming Soon!</strong> Advanced analytics and AI insights for your pipelines.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal for Pipeline Details -->
+    <div id="pipeline-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title">Pipeline Details</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <div id="modal-body">
+                <!-- Pipeline details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global state
+        let currentPipelines = [];
+        let currentTab = 'create';
+
+        // Initialize the application
+        document.addEventListener('DOMContentLoaded', function () {
+            setupEventListeners();
+            loadPipelines();
+            updateValidationPipelineOptions();
+        });
+
+        function setupEventListeners() {
+            // File drop zone
+            const dropZone = document.getElementById('file-drop-zone');
+            const fileInput = document.getElementById('data-file');
+
+            dropZone.addEventListener('click', () => fileInput.click());
+            dropZone.addEventListener('dragover', handleDragOver);
+            dropZone.addEventListener('drop', handleDrop);
+            dropZone.addEventListener('dragleave', handleDragLeave);
+
+            fileInput.addEventListener('change', handleFileSelect);
+
+            // Forms
+            document.getElementById('create-pipeline-form').addEventListener('submit', handleCreatePipeline);
+            document.getElementById('validate-form').addEventListener('submit', handleValidateData);
+
+            // Modal
+            document.getElementById('pipeline-modal').addEventListener('click', function (e) {
+                if (e.target === this) {
+                    closeModal();
+                }
+            });
+        }
+
+        function switchTab(tabName) {
+            // Update tab buttons
+            document.querySelectorAll('.nav-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            event.target.classList.add('active');
+
+            // Update tab content
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            document.getElementById(tabName + '-tab').classList.add('active');
+
+            currentTab = tabName;
+
+            // Load data for specific tabs
+            if (tabName === 'pipelines') {
+                loadPipelines();
+            } else if (tabName === 'validate') {
+                updateValidationPipelineOptions();
+            }
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.currentTarget.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            e.currentTarget.classList.remove('dragover');
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.currentTarget.classList.remove('dragover');
+
+            const files = e.dataTransfer.files;
+            if (files.length > 0) {
+                document.getElementById('data-file').files = files;
+                updateDropZoneText(files[0]);
+            }
+        }
+
+        function handleFileSelect(e) {
+            const file = e.target.files[0];
+            if (file) {
+                updateDropZoneText(file);
+            }
+        }
+
+        function updateDropZoneText(file) {
+            const dropZone = document.getElementById('file-drop-zone');
+            dropZone.innerHTML = `
+                <div class="drop-zone-content">
+                    <div class="drop-zone-icon">✅</div>
+                    <div>
+                        <strong>${file.name}</strong> selected
+                        <br><span style="color: var(--text-secondary); font-size: 12px;">Size: ${formatFileSize(file.size)}</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function formatFileSize(bytes) {
+            if (bytes === 0) return '0 Bytes';
+            const k = 1024;
+            const sizes = ['Bytes', 'KB', 'MB', 'GB'];
+            const i = Math.floor(Math.log(bytes) / Math.log(k));
+            return parseFloat((bytes / Math.pow(k, i)).toFixed(2)) + ' ' + sizes[i];
+        }
+
+        function updateDestinationConfig() {
+            const destType = document.getElementById('dest-type').value;
+            const configDiv = document.getElementById('destination-config');
+
+            let configHTML = '';
+
+            switch (destType) {
+                case 'csv':
+                    configHTML = `
+                        <div class="form-group">
+                            <label class="form-label">Output File Path</label>
+                            <input type="text" class="form-input" id="dest-file-path" placeholder="/path/to/output.csv" value="output.csv">
+                        </div>
+                    `;
+                    break;
+                case 'postgresql':
+                    configHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Host</label>
+                                <input type="text" class="form-input" id="dest-host" placeholder="localhost" value="localhost">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Database</label>
+                                <input type="text" class="form-input" id="dest-database" placeholder="analytics" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Table Name</label>
+                                <input type="text" class="form-input" id="dest-table" placeholder="processed_data" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Schema</label>
+                                <input type="text" class="form-input" id="dest-schema" placeholder="public" value="public">
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'mysql':
+                    configHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Host</label>
+                                <input type="text" class="form-input" id="dest-host" placeholder="localhost" value="localhost">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Database</label>
+                                <input type="text" class="form-input" id="dest-database" placeholder="analytics" required>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Table Name</label>
+                                <input type="text" class="form-input" id="dest-table" placeholder="processed_data" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Port</label>
+                                <input type="number" class="form-input" id="dest-port" placeholder="3306" value="3306">
+                            </div>
+                        </div>
+                    `;
+                    break;
+                case 'bigquery':
+                    configHTML = `
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Project ID</label>
+                                <input type="text" class="form-input" id="dest-project" placeholder="my-project-123" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Dataset</label>
+                                <input type="text" class="form-input" id="dest-dataset" placeholder="analytics" required>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Table Name</label>
+                            <input type="text" class="form-input" id="dest-table" placeholder="processed_data" required>
+                        </div>
+                    `;
+                    break;
+            }
+
+            configDiv.innerHTML = configHTML;
+        }
+
+        async function handleCreatePipeline(e) {
+            e.preventDefault();
+
+            const fileInput = document.getElementById('data-file');
+            const file = fileInput.files[0];
+
+            if (!file) {
+                showAlert('Please select a data file', 'error');
+                return;
+            }
+
+            const pipelineName = document.getElementById('pipeline-name').value;
+            const framework = document.getElementById('framework').value;
+            const destType = document.getElementById('dest-type').value;
+
+            // Show loading state
+            const createBtn = document.getElementById('create-btn');
+            const originalText = createBtn.innerHTML;
+            createBtn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div> Creating...';
+            createBtn.disabled = true;
+
+            try {
+                // Simulate AI processing
+                await new Promise(resolve => setTimeout(resolve, 3000));
+
+                // Analyze the file
+                const fileAnalysis = await analyzeDataFile(file);
+
+                // Generate pipeline code
+                const pipelineCode = generatePipelineCode(pipelineName, framework, destType, fileAnalysis);
+
+                // Create pipeline object
+                const pipeline = {
+                    id: generateId(),
+                    name: pipelineName,
+                    framework: framework,
+                    destination: destType,
+                    status: 'active',
+                    createdAt: new Date().toISOString(),
+                    transformations: fileAnalysis.suggestedTransformations.length,
+                    qualityChecks: fileAnalysis.qualityChecks.length,
+                    code: pipelineCode,
+                    analysis: fileAnalysis
+                };
+
+                // Save pipeline
+                savePipeline(pipeline);
+
+                // Show results
+                displayCreationResults(pipeline);
+
+                // Reset form
+                document.getElementById('create-pipeline-form').reset();
+                resetDropZone();
+
+                showAlert('Pipeline created successfully!', 'success');
+
+            } catch (error) {
+                showAlert('Error creating pipeline: ' + error.message, 'error');
+            } finally {
+                createBtn.innerHTML = originalText;
+                createBtn.disabled = false;
+            }
+        }
+
+        async function analyzeDataFile(file) {
+            const text = await file.text();
+            let data;
+
+            try {
+                if (file.name.endsWith('.json')) {
+                    data = JSON.parse(text);
+                } else if (file.name.endsWith('.csv')) {
+                    // Simple CSV parsing
+                    const lines = text.split('\n');
+                    const headers = lines[0].split(',').map(h => h.trim());
+                    data = lines.slice(1).map(line => {
+                        const values = line.split(',');
+                        const row = {};
+                        headers.forEach((header, index) => {
+                            row[header] = values[index]?.trim() || '';
+                        });
+                        return row;
+                    }).filter(row => Object.values(row).some(val => val !== ''));
+                }
+            } catch (error) {
+                throw new Error('Failed to parse data file');
+            }
+
+            // AI Analysis simulation
+            const columns = Object.keys(data[0] || {});
+            const rowCount = data.length;
+
+            // Generate insights
+            const insights = {
+                rowCount: rowCount,
+                columnCount: columns.length,
+                columns: columns,
+                dataTypes: analyzeDataTypes(data, columns),
+                nullValues: analyzeNullValues(data, columns),
+                suggestedTransformations: generateTransformations(data, columns),
+                qualityChecks: generateQualityChecks(data, columns),
+                recommendations: generateRecommendations(data, columns)
+            };
+
+            return insights;
+        }
+
+        function analyzeDataTypes(data, columns) {
+            const types = {};
+            columns.forEach(col => {
+                const sample = data.slice(0, 100).map(row => row[col]).filter(val => val !== '');
+                if (sample.length === 0) {
+                    types[col] = 'unknown';
+                } else if (sample.every(val => !isNaN(val) && !isNaN(parseFloat(val)))) {
+                    types[col] = sample.some(val => val.includes('.')) ? 'float' : 'integer';
+                } else if (sample.every(val => /^\d{4}-\d{2}-\d{2}/.test(val))) {
+                    types[col] = 'date';
+                } else {
+                    types[col] = 'string';
+                }
+            });
+            return types;
+        }
+
+        function analyzeNullValues(data, columns) {
+            const nullStats = {};
+            columns.forEach(col => {
+                const nullCount = data.filter(row => !row[col] || row[col].trim() === '').length;
+                nullStats[col] = {
+                    count: nullCount,
+                    percentage: ((nullCount / data.length) * 100).toFixed(1)
+                };
+            });
+            return nullStats;
+        }
+
+        function generateTransformations(data, columns) {
+            const transformations = [];
+
+            // Common transformations
+            transformations.push({
+                type: 'data_cleaning',
+                description: 'Remove duplicate rows and handle missing values',
+                code: 'df.drop_duplicates().fillna(method="forward")'
+            });
+
+            columns.forEach(col => {
+                const sample = data.slice(0, 50).map(row => row[col]);
+
+                if (sample.some(val => val && val.toString().toLowerCase().includes('email'))) {
+                    transformations.push({
+                        type: 'validation',
+                        description: `Validate email format in ${col}`,
+                        code: `df['${col}'] = df['${col}'].apply(validate_email)`
+                    });
+                }
+
+                if (sample.some(val => val && !isNaN(val))) {
+                    transformations.push({
+                        type: 'normalization',
+                        description: `Normalize ${col} values`,
+                        code: `df['${col}_normalized'] = (df['${col}'] - df['${col}'].mean()) / df['${col}'].std()`
+                    });
+                }
+            });
+
+            return transformations;
+        }
+
+        function generateQualityChecks(data, columns) {
+            const checks = [];
+
+            checks.push({
+                type: 'completeness',
+                description: 'Check for missing values across all columns',
+                severity: 'high'
+            });
+
+            checks.push({
+                type: 'uniqueness',
+                description: 'Validate unique constraints where applicable',
+                severity: 'medium'
+            });
+
+            checks.push({
+                type: 'consistency',
+                description: 'Check data format consistency',
+                severity: 'medium'
+            });
+
+            return checks;
+        }
+
+        function generateRecommendations(data, columns) {
+            const recommendations = [];
+
+            recommendations.push('Consider adding data profiling steps to monitor data quality over time');
+            recommendations.push('Implement incremental loading for better performance with large datasets');
+            recommendations.push('Add alerting mechanisms for data quality failures');
+
+            if (data.length > 10000) {
+                recommendations.push('Consider partitioning strategy for large dataset optimization');
+            }
+
+            return recommendations;
+        }
+
+        function generatePipelineCode(name, framework, destType, analysis) {
+            const templates = {
+                airflow: generateAirflowCode,
+                prefect: generatePrefectCode,
+                dbt: generateDbtCode
+            };
+
+            return templates[framework](name, destType, analysis);
+        }
+
+        function generateAirflowCode(name, destType, analysis) {
+            return `from datetime import datetime, timedelta
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
+from airflow.operators.bash_operator import BashOperator
+import pandas as pd
+import logging
+
+# DAG Configuration
+default_args = {
+    'owner': 'dataops-ai',
+    'depends_on_past': False,
+    'start_date': datetime(2024, 1, 1),
+    'email_on_failure': True,
+    'email_on_retry': False,
+    'retries': 2,
+    'retry_delay': timedelta(minutes=5)
+}
+
+dag = DAG(
+    '${name}',
+    default_args=default_args,
+    description='AI-generated data pipeline for ${name}',
+    schedule_interval='@daily',
+    catchup=False,
+    tags=['ai-generated', 'dataops']
+)
+
+def extract_data(**context):
+    """Extract data from source"""
+    logging.info("Starting data extraction...")
+    # Add your data extraction logic here
+    df = pd.read_csv('input_data.csv')
+    logging.info(f"Extracted {len(df)} rows")
+    return df.to_json()
+
+def transform_data(**context):
+    """Apply AI-suggested transformations"""
+    logging.info("Starting data transformation...")
+    ti = context['ti']
+    json_data = ti.xcom_pull(task_ids='extract_data')
+    df = pd.read_json(json_data)
+    
+    # AI-generated transformations
+    ${analysis.suggestedTransformations.map(t => `    # ${t.description}\n    # ${t.code}`).join('\n')}
+    
+    logging.info(f"Transformed data: {len(df)} rows, {len(df.columns)} columns")
+    return df.to_json()
+
+def quality_checks(**context):
+    """Run AI-powered quality checks"""
+    logging.info("Running quality checks...")
+    ti = context['ti']
+    json_data = ti.xcom_pull(task_ids='transform_data')
+    df = pd.read_json(json_data)
+    
+    # Quality checks
+    ${analysis.qualityChecks.map(check => `    # ${check.description} (${check.severity} priority)`).join('\n')}
+    
+    logging.info("Quality checks completed successfully")
+    return json_data
+
+def load_data(**context):
+    """Load data to destination"""
+    logging.info("Loading data to ${destType}...")
+    ti = context['ti']
+    json_data = ti.xcom_pull(task_ids='quality_checks')
+    df = pd.read_json(json_data)
+    
+    # Load to destination
+    ${destType === 'csv' ? "df.to_csv('output.csv', index=False)" : `# Configure ${destType} connection and load data`}
+    
+    logging.info(f"Successfully loaded {len(df)} rows to ${destType}")
+
+# Define tasks
+extract_task = PythonOperator(
+    task_id='extract_data',
+    python_callable=extract_data,
+    dag=dag
+)
+
+transform_task = PythonOperator(
+    task_id='transform_data',
+    python_callable=transform_data,
+    dag=dag
+)
+
+quality_task = PythonOperator(
+    task_id='quality_checks',
+    python_callable=quality_checks,
+    dag=dag
+)
+
+load_task = PythonOperator(
+    task_id='load_data',
+    python_callable=load_data,
+    dag=dag
+)
+
+# Set task dependencies
+extract_task >> transform_task >> quality_task >> load_task`;
+        }
+
+        function generatePrefectCode(name, destType, analysis) {
+            return `from prefect import flow, task, get_run_logger
+from prefect.task_runners import SequentialTaskRunner
+import pandas as pd
+from typing import Dict, Any
+
+@task(name="extract_data")
+def extract_data() -> pd.DataFrame:
+    """Extract data from source"""
+    logger = get_run_logger()
+    logger.info("Starting data extraction...")
+    
+    # Add your data extraction logic here
+    df = pd.read_csv('input_data.csv')
+    logger.info(f"Extracted {len(df)} rows")
+    return df
+
+@task(name="transform_data")
+def transform_data(df: pd.DataFrame) -> pd.DataFrame:
+    """Apply AI-suggested transformations"""
+    logger = get_run_logger()
+    logger.info("Starting data transformation...")
+    
+    # AI-generated transformations
+    ${analysis.suggestedTransformations.map(t => `    # ${t.description}\n    # ${t.code}`).join('\n')}
+    
+    logger.info(f"Transformed data: {len(df)} rows, {len(df.columns)} columns")
+    return df
+
+@task(name="quality_checks")
+def quality_checks(df: pd.DataFrame) -> pd.DataFrame:
+    """Run AI-powered quality checks"""
+    logger = get_run_logger()
+    logger.info("Running quality checks...")
+    
+    # Quality checks
+    ${analysis.qualityChecks.map(check => `    # ${check.description} (${check.severity} priority)`).join('\n')}
+    
+    logger.info("Quality checks completed successfully")
+    return df
+
+@task(name="load_data")
+def load_data(df: pd.DataFrame) -> Dict[str, Any]:
+    """Load data to destination"""
+    logger = get_run_logger()
+    logger.info("Loading data to ${destType}...")
+    
+    # Load to destination
+    ${destType === 'csv' ? "df.to_csv('output.csv', index=False)" : `# Configure ${destType} connection and load data`}
+    
+    logger.info(f"Successfully loaded {len(df)} rows to ${destType}")
+    return {"status": "success", "rows_loaded": len(df)}
+
+@flow(name="${name}", task_runner=SequentialTaskRunner())
+def ${name.replace(/-/g, '_')}_flow():
+    """AI-generated data pipeline for ${name}"""
+    
+    # Execute pipeline tasks
+    raw_data = extract_data()
+    transformed_data = transform_data(raw_data)
+    validated_data = quality_checks(transformed_data)
+    result = load_data(validated_data)
+    
+    return result
+
+if __name__ == "__main__":
+    ${name.replace(/-/g, '_')}_flow()`;
+        }
+
+        function generateDbtCode(name, destType, analysis) {
+            return `-- AI-generated dbt model for ${name}
+-- Generated on: {{ run_started_at }}
+
+{{ config(
+    materialized='table',
+    tags=['ai-generated', 'dataops'],
+    post_hook="ANALYZE TABLE {{ this }}"
+) }}
+
+WITH source_data AS (
+    SELECT *
+    FROM {{ ref('raw_${name.replace(/-/g, '_')}') }}
+),
+
+cleaned_data AS (
+    SELECT *
+    FROM source_data
+    -- AI-suggested data cleaning
+    WHERE 1=1
+    ${analysis.suggestedTransformations.map(t => `    -- ${t.description}`).join('\n')}
+),
+
+transformed_data AS (
+    SELECT 
+        *,
+        -- Add computed columns and transformations
+        CURRENT_TIMESTAMP AS processed_at,
+        'ai-pipeline' AS pipeline_source
+    FROM cleaned_data
+),
+
+quality_checked AS (
+    SELECT *
+    FROM transformed_data
+    -- AI-powered quality checks
+    ${analysis.qualityChecks.map(check => `    -- ${check.description}`).join('\n')}
+)
+
+SELECT * FROM quality_checked
+
+-- Quality tests (save as ${name}_tests.sql)
+/*
+${analysis.qualityChecks.map(check => `
+-- Test: ${check.description}
+SELECT 
+    COUNT(*) as test_count,
+    '${check.description}' as test_description,
+    '${check.severity}' as severity
+FROM ({{ ref('${name}') }})
+-- Add specific test logic here
+`).join('\n')}
+*/`;
+        }
+
+        function generateId() {
+            return 'pipeline_' + Math.random().toString(36).substr(2, 9);
+        }
+
+        function savePipeline(pipeline) {
+            let pipelines = JSON.parse(window.localStorage?.getItem('dataops_pipelines') || '[]');
+            pipelines.push(pipeline);
+            try {
+                window.localStorage?.setItem('dataops_pipelines', JSON.stringify(pipelines));
+            } catch (e) {
+                // If localStorage fails, keep in memory
+                currentPipelines.push(pipeline);
+            }
+        }
+
+        function loadPipelines() {
+            try {
+                const stored = window.localStorage?.getItem('dataops_pipelines');
+                currentPipelines = stored ? JSON.parse(stored) : currentPipelines;
+            } catch (e) {
+                // Use in-memory storage if localStorage fails
+                console.log('Using in-memory storage for pipelines');
+            }
+
+            displayPipelines();
+            updatePipelineStats();
+        }
+
+        function displayPipelines() {
+            const grid = document.getElementById('pipelines-grid');
+
+            if (currentPipelines.length === 0) {
+                grid.innerHTML = `
+                    <div class="alert alert-info" style="grid-column: 1 / -1;">
+                        <strong>No pipelines yet!</strong> Create your first AI-powered pipeline in the Create tab.
+                    </div>
+                `;
+                return;
+            }
+
+            grid.innerHTML = currentPipelines.map(pipeline => `
+                <div class="pipeline-card" onclick="showPipelineDetails('${pipeline.id}')">
+                    <div class="pipeline-header">
+                        <div>
+                            <div class="pipeline-name">${pipeline.name}</div>
+                            <div class="pipeline-framework">${pipeline.framework}</div>
+                        </div>
+                        <div class="pipeline-actions">
+                            <button class="icon-btn" onclick="event.stopPropagation(); runPipeline('${pipeline.id}')" title="Run Pipeline">
+                                ▶️
+                            </button>
+                            <button class="icon-btn" onclick="event.stopPropagation(); deletePipeline('${pipeline.id}')" title="Delete Pipeline">
+                                🗑️
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <div class="pipeline-info">
+                        <div class="info-item">
+                            <div class="info-label">Status</div>
+                            <div class="info-value">
+                                <span class="status-badge status-${getStatusClass(pipeline.status)}">${pipeline.status}</span>
+                            </div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Destination</div>
+                            <div class="info-value">${pipeline.destination}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Transformations</div>
+                            <div class="info-value">${pipeline.transformations}</div>
+                        </div>
+                        <div class="info-item">
+                            <div class="info-label">Quality Checks</div>
+                            <div class="info-value">${pipeline.qualityChecks}</div>
+                        </div>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: ${Math.random() * 100}%"></div>
+                    </div>
+                    
+                    <div style="font-size: 12px; color: var(--text-secondary); margin-top: 8px;">
+                        Created: ${new Date(pipeline.createdAt).toLocaleDateString()}
+                    </div>
+                </div>
+            `).join('');
+        }
+
+        function getStatusClass(status) {
+            const statusMap = {
+                'active': 'success',
+                'inactive': 'warning',
+                'error': 'error',
+                'running': 'info'
+            };
+            return statusMap[status] || 'info';
+        }
+
+        function updatePipelineStats() {
+            const total = currentPipelines.length;
+            const active = currentPipelines.filter(p => p.status === 'active').length;
+            const totalTransformations = currentPipelines.reduce((sum, p) => sum + p.transformations, 0);
+            const totalQualityChecks = currentPipelines.reduce((sum, p) => sum + p.qualityChecks, 0);
+
+            document.getElementById('total-pipelines').textContent = total;
+            document.getElementById('active-pipelines').textContent = active;
+            document.getElementById('total-transformations').textContent = totalTransformations;
+            document.getElementById('quality-checks').textContent = totalQualityChecks;
+        }
+
+        function showPipelineDetails(pipelineId) {
+            const pipeline = currentPipelines.find(p => p.id === pipelineId);
+            if (!pipeline) return;
+
+            const modalBody = document.getElementById('modal-body');
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <div class="form-label">Pipeline Information</div>
+                    <div style="background: var(--background); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                            <div><strong>Name:</strong> ${pipeline.name}</div>
+                            <div><strong>Framework:</strong> ${pipeline.framework}</div>
+                            <div><strong>Status:</strong> <span class="status-badge status-${getStatusClass(pipeline.status)}">${pipeline.status}</span></div>
+                            <div><strong>Destination:</strong> ${pipeline.destination}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="form-label">Data Analysis</div>
+                    <div style="background: var(--background); padding: 16px; border-radius: 8px; margin-bottom: 20px;">
+                        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: 12px; margin-bottom: 16px;">
+                            <div><strong>Rows:</strong> ${pipeline.analysis.rowCount.toLocaleString()}</div>
+                            <div><strong>Columns:</strong> ${pipeline.analysis.columnCount}</div>
+                            <div><strong>Transformations:</strong> ${pipeline.transformations}</div>
+                            <div><strong>Quality Checks:</strong> ${pipeline.qualityChecks}</div>
+                        </div>
+                        
+                        <div style="margin-bottom: 16px;">
+                            <strong>Columns:</strong> ${pipeline.analysis.columns.join(', ')}
+                        </div>
+                        
+                        <div>
+                            <strong>AI Recommendations:</strong>
+                            <ul class="recommendations-list">
+                                ${pipeline.analysis.recommendations.map(rec => `
+                                    <li><div class="rec-icon"></div>${rec}</li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="code-header">
+                        <span>Generated Pipeline Code</span>
+                        <button class="copy-btn" onclick="copyToClipboard('pipeline-code-${pipeline.id}')">Copy</button>
+                    </div>
+                    <div class="code-block" id="pipeline-code-${pipeline.id}">${escapeHtml(pipeline.code)}</div>
+                </div>
+
+                <div style="display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px;">
+                    <button class="btn btn-outline" onclick="downloadPipelineCode('${pipeline.id}')">
+                        <span>💾</span> Download Code
+                    </button>
+                    <button class="btn btn-primary" onclick="runPipeline('${pipeline.id}')">
+                        <span>▶️</span> Run Pipeline
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('pipeline-modal').classList.add('active');
+        }
+
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        function copyToClipboard(elementId) {
+            const element = document.getElementById(elementId);
+            const text = element.textContent;
+
+            if (navigator.clipboard) {
+                navigator.clipboard.writeText(text).then(() => {
+                    showAlert('Code copied to clipboard!', 'success');
+                });
+            } else {
+                // Fallback for older browsers
+                const textArea = document.createElement('textarea');
+                textArea.value = text;
+                document.body.appendChild(textArea);
+                textArea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textArea);
+                showAlert('Code copied to clipboard!', 'success');
+            }
+        }
+
+        function downloadPipelineCode(pipelineId) {
+            const pipeline = currentPipelines.find(p => p.id === pipelineId);
+            if (!pipeline) return;
+
+            const extensions = {
+                'airflow': 'py',
+                'prefect': 'py',
+                'dbt': 'sql'
+            };
+
+            const filename = `${pipeline.name}.${extensions[pipeline.framework]}`;
+            const blob = new Blob([pipeline.code], { type: 'text/plain' });
+            const url = URL.createObjectURL(blob);
+
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = filename;
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+
+        function runPipeline(pipelineId) {
+            const pipeline = currentPipelines.find(p => p.id === pipelineId);
+            if (!pipeline) return;
+
+            showAlert(`Pipeline "${pipeline.name}" execution started! Check your ${pipeline.framework} dashboard for progress.`, 'info');
+
+            // Update pipeline status
+            pipeline.status = 'running';
+            savePipelineUpdate(pipeline);
+
+            // Simulate pipeline completion
+            setTimeout(() => {
+                pipeline.status = 'active';
+                savePipelineUpdate(pipeline);
+                displayPipelines();
+                showAlert(`Pipeline "${pipeline.name}" completed successfully!`, 'success');
+            }, 5000);
+
+            displayPipelines();
+        }
+
+        function deletePipeline(pipelineId) {
+            if (!confirm('Are you sure you want to delete this pipeline?')) return;
+
+            currentPipelines = currentPipelines.filter(p => p.id !== pipelineId);
+
+            try {
+                window.localStorage?.setItem('dataops_pipelines', JSON.stringify(currentPipelines));
+            } catch (e) {
+                // Handle localStorage failure gracefully
+            }
+
+            displayPipelines();
+            updatePipelineStats();
+            showAlert('Pipeline deleted successfully!', 'success');
+        }
+
+        function savePipelineUpdate(pipeline) {
+            const index = currentPipelines.findIndex(p => p.id === pipeline.id);
+            if (index !== -1) {
+                currentPipelines[index] = pipeline;
+                try {
+                    window.localStorage?.setItem('dataops_pipelines', JSON.stringify(currentPipelines));
+                } catch (e) {
+                    // Handle localStorage failure gracefully
+                }
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('pipeline-modal').classList.remove('active');
+        }
+
+        function displayCreationResults(pipeline) {
+            const resultsDiv = document.getElementById('creation-results');
+            resultsDiv.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">✅ Pipeline Created Successfully!</h3>
+                        <p class="card-subtitle">AI has analyzed your data and generated an optimized pipeline</p>
+                    </div>
+                    
+                    <div class="alert alert-success">
+                        <strong>Pipeline "${pipeline.name}" is ready!</strong> 
+                        Your ${pipeline.framework} pipeline has been generated with ${pipeline.transformations} transformations and ${pipeline.qualityChecks} quality checks.
+                    </div>
+
+                    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 16px; margin-bottom: 20px;">
+                        <div class="stat-card">
+                            <div class="stat-value">${pipeline.analysis.rowCount.toLocaleString()}</div>
+                            <div class="stat-label">Rows Analyzed</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${pipeline.analysis.columnCount}</div>
+                            <div class="stat-label">Columns Detected</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${pipeline.transformations}</div>
+                            <div class="stat-label">Transformations</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${pipeline.qualityChecks}</div>
+                            <div class="stat-label">Quality Checks</div>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 12px; flex-wrap: wrap;">
+                        <button class="btn btn-primary" onclick="showPipelineDetails('${pipeline.id}')">
+                            <span>👁️</span> View Details
+                        </button>
+                        <button class="btn btn-secondary" onclick="downloadPipelineCode('${pipeline.id}')">
+                            <span>💾</span> Download Code
+                        </button>
+                        <button class="btn btn-success" onclick="runPipeline('${pipeline.id}')">
+                            <span>▶️</span> Run Pipeline
+                        </button>
+                        <button class="btn btn-outline" onclick="switchTab('pipelines')">
+                            <span>📊</span> View All Pipelines
+                        </button>
+                    </div>
+                </div>
+            `;
+            resultsDiv.style.display = 'block';
+        }
+
+        function resetDropZone() {
+            const dropZone = document.getElementById('file-drop-zone');
+            dropZone.innerHTML = `
+                <div class="drop-zone-content">
+                    <div class="drop-zone-icon">📄</div>
+                    <div>
+                        <strong>Drop your data file here</strong> or click to browse
+                        <br><span style="color: var(--text-secondary); font-size: 12px;">Supports CSV, JSON files</span>
+                    </div>
+                </div>
+            `;
+        }
+
+        function updateValidationPipelineOptions() {
+            const select = document.getElementById('validation-pipeline');
+            select.innerHTML = '<option value="">Choose a pipeline...</option>';
+
+            currentPipelines.forEach(pipeline => {
+                const option = document.createElement('option');
+                option.value = pipeline.id;
+                option.textContent = `${pipeline.name} (${pipeline.framework})`;
+                select.appendChild(option);
+            });
+        }
+
+        async function handleValidateData(e) {
+            e.preventDefault();
+
+            const pipelineId = document.getElementById('validation-pipeline').value;
+            const fileInput = document.getElementById('validation-file');
+            const file = fileInput.files[0];
+
+            if (!pipelineId || !file) {
+                showAlert('Please select both a pipeline and data file', 'error');
+                return;
+            }
+
+            const pipeline = currentPipelines.find(p => p.id === pipelineId);
+            if (!pipeline) {
+                showAlert('Selected pipeline not found', 'error');
+                return;
+            }
+
+            // Show loading
+            const submitBtn = e.target.querySelector('button[type="submit"]');
+            const originalText = submitBtn.innerHTML;
+            submitBtn.innerHTML = '<div class="spinner" style="width: 20px; height: 20px; border-width: 2px;"></div> Validating...';
+            submitBtn.disabled = true;
+
+            try {
+                // Analyze the validation file
+                const fileAnalysis = await analyzeDataFile(file);
+
+                // Compare with pipeline expectations
+                const validationResults = validateAgainstPipeline(fileAnalysis, pipeline);
+
+                // Display results
+                displayValidationResults(validationResults, pipeline);
+
+                showAlert('Data validation completed!', 'success');
+
+            } catch (error) {
+                showAlert('Error during validation: ' + error.message, 'error');
+            } finally {
+                submitBtn.innerHTML = originalText;
+                submitBtn.disabled = false;
+            }
+        }
+
+        function validateAgainstPipeline(fileAnalysis, pipeline) {
+            const results = {
+                overall: 'passed',
+                issues: [],
+                warnings: [],
+                recommendations: [],
+                metrics: {
+                    dataQualityScore: 85,
+                    schemaCompatibility: 92,
+                    performanceIndex: 78
+                }
+            };
+
+            // Schema validation
+            const expectedColumns = pipeline.analysis.columns;
+            const actualColumns = fileAnalysis.columns;
+
+            const missingColumns = expectedColumns.filter(col => !actualColumns.includes(col));
+            const extraColumns = actualColumns.filter(col => !expectedColumns.includes(col));
+
+            if (missingColumns.length > 0) {
+                results.issues.push({
+                    type: 'schema',
+                    severity: 'high',
+                    message: `Missing required columns: ${missingColumns.join(', ')}`
+                });
+                results.overall = 'failed';
+            }
+
+            if (extraColumns.length > 0) {
+                results.warnings.push({
+                    type: 'schema',
+                    severity: 'medium',
+                    message: `Unexpected columns found: ${extraColumns.join(', ')}`
+                });
+            }
+
+            // Data type validation
+            actualColumns.forEach(col => {
+                if (expectedColumns.includes(col)) {
+                    const expectedType = pipeline.analysis.dataTypes[col];
+                    const actualType = fileAnalysis.dataTypes[col];
+
+                    if (expectedType && actualType && expectedType !== actualType) {
+                        results.issues.push({
+                            type: 'datatype',
+                            severity: 'medium',
+                            message: `Column "${col}" type mismatch. Expected: ${expectedType}, Found: ${actualType}`
+                        });
+                    }
+                }
+            });
+
+            // Data quality checks
+            Object.keys(fileAnalysis.nullValues).forEach(col => {
+                const nullPercentage = parseFloat(fileAnalysis.nullValues[col].percentage);
+                if (nullPercentage > 50) {
+                    results.issues.push({
+                        type: 'quality',
+                        severity: 'high',
+                        message: `Column "${col}" has ${nullPercentage}% null values`
+                    });
+                } else if (nullPercentage > 20) {
+                    results.warnings.push({
+                        type: 'quality',
+                        severity: 'medium',
+                        message: `Column "${col}" has ${nullPercentage}% null values`
+                    });
+                }
+            });
+
+            // Performance recommendations
+            if (fileAnalysis.rowCount > 100000) {
+                results.recommendations.push('Consider implementing batch processing for large dataset');
+            }
+
+            if (actualColumns.length > 50) {
+                results.recommendations.push('Consider column selection to improve processing performance');
+            }
+
+            // Calculate overall score
+            if (results.issues.length > 0) {
+                results.overall = results.issues.some(i => i.severity === 'high') ? 'failed' : 'warning';
+            }
+
+            return results;
+        }
+
+        function displayValidationResults(results, pipeline) {
+            const resultsDiv = document.getElementById('validation-results');
+
+            const overallClass = {
+                'passed': 'success',
+                'warning': 'warning',
+                'failed': 'error'
+            }[results.overall];
+
+            resultsDiv.innerHTML = `
+                <div class="card">
+                    <div class="card-header">
+                        <h3 class="card-title">🔍 Validation Results</h3>
+                        <p class="card-subtitle">Data validation against pipeline: ${pipeline.name}</p>
+                    </div>
+                    
+                    <div class="alert alert-${overallClass}">
+                        <strong>Overall Status: ${results.overall.toUpperCase()}</strong>
+                        ${results.overall === 'passed' ? 'Your data is compatible with the pipeline!' :
+                    results.overall === 'warning' ? 'Data is mostly compatible but has some warnings.' :
+                        'Data has critical issues that need to be resolved.'}
+                    </div>
+
+                    <div class="stats-grid" style="margin-bottom: 24px;">
+                        <div class="stat-card">
+                            <div class="stat-value" style="color: ${results.metrics.dataQualityScore >= 80 ? 'var(--success-color)' : 'var(--warning-color)'}">${results.metrics.dataQualityScore}%</div>
+                            <div class="stat-label">Data Quality Score</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" style="color: ${results.metrics.schemaCompatibility >= 90 ? 'var(--success-color)' : 'var(--warning-color)'}">${results.metrics.schemaCompatibility}%</div>
+                            <div class="stat-label">Schema Compatibility</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value" style="color: ${results.metrics.performanceIndex >= 75 ? 'var(--success-color)' : 'var(--warning-color)'}">${results.metrics.performanceIndex}%</div>
+                            <div class="stat-label">Performance Index</div>
+                        </div>
+                        <div class="stat-card">
+                            <div class="stat-value">${results.issues.length + results.warnings.length}</div>
+                            <div class="stat-label">Total Issues</div>
+                        </div>
+                    </div>
+
+                    ${results.issues.length > 0 ? `
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: var(--error-color); margin-bottom: 12px;">🚨 Critical Issues</h4>
+                            ${results.issues.map(issue => `
+                                <div class="alert alert-error">
+                                    <strong>${issue.type.toUpperCase()}:</strong> ${issue.message}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${results.warnings.length > 0 ? `
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: var(--warning-color); margin-bottom: 12px;">⚠️ Warnings</h4>
+                            ${results.warnings.map(warning => `
+                                <div class="alert alert-warning">
+                                    <strong>${warning.type.toUpperCase()}:</strong> ${warning.message}
+                                </div>
+                            `).join('')}
+                        </div>
+                    ` : ''}
+
+                    ${results.recommendations.length > 0 ? `
+                        <div style="margin-bottom: 20px;">
+                            <h4 style="color: var(--primary-color); margin-bottom: 12px;">💡 Recommendations</h4>
+                            <ul class="recommendations-list">
+                                ${results.recommendations.map(rec => `
+                                    <li><div class="rec-icon" style="background: var(--primary-color);"></div>${rec}</li>
+                                `).join('')}
+                            </ul>
+                        </div>
+                    ` : ''}
+
+                    <div style="display: flex; gap: 12px; justify-content: flex-end;">
+                        <button class="btn btn-outline" onclick="exportValidationReport()">
+                            <span>📋</span> Export Report
+                        </button>
+                        ${results.overall === 'passed' ? `
+                            <button class="btn btn-success" onclick="runPipeline('${pipeline.id}')">
+                                <span>▶️</span> Run Pipeline
+                            </button>
+                        ` : ''}
+                    </div>
+                </div>
+            `;
+
+            resultsDiv.style.display = 'block';
+        }
+
+        function exportValidationReport() {
+            showAlert('Validation report export feature coming soon!', 'info');
+        }
+
+        function showAlert(message, type = 'info') {
+            // Remove existing alerts
+            const existingAlert = document.querySelector('.floating-alert');
+            if (existingAlert) {
+                existingAlert.remove();
+            }
+
+            // Create alert element
+            const alert = document.createElement('div');
+            alert.className = `alert alert-${type} floating-alert`;
+            alert.style.cssText = `
+                position: fixed;
+                top: 20px;
+                right: 20px;
+                z-index: 10000;
+                min-width: 300px;
+                max-width: 500px;
+                box-shadow: var(--shadow-lg);
+                animation: slideIn 0.3s ease-out;
+            `;
+            alert.innerHTML = message;
+
+            // Add slide-in animation
+            const style = document.createElement('style');
+            style.textContent = `
+                @keyframes slideIn {
+                    from {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                    to {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                }
+                @keyframes slideOut {
+                    from {
+                        transform: translateX(0);
+                        opacity: 1;
+                    }
+                    to {
+                        transform: translateX(100%);
+                        opacity: 0;
+                    }
+                }
+            `;
+            document.head.appendChild(style);
+
+            document.body.appendChild(alert);
+
+            // Auto-remove after 5 seconds
+            setTimeout(() => {
+                alert.style.animation = 'slideOut 0.3s ease-in forwards';
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.remove();
+                    }
+                }, 300);
+            }, 5000);
+
+            // Click to dismiss
+            alert.addEventListener('click', () => {
+                alert.style.animation = 'slideOut 0.3s ease-in forwards';
+                setTimeout(() => {
+                    if (alert.parentNode) {
+                        alert.remove();
+                    }
+                }, 300);
+            });
+        }
+
+        // Demo data for initial load
+        function loadDemoData() {
+            if (currentPipelines.length === 0) {
+                const demoPipelines = [
+                    {
+                        id: 'demo_1',
+                        name: 'customer-analytics-demo',
+                        framework: 'airflow',
+                        destination: 'postgresql',
+                        status: 'active',
+                        createdAt: new Date(Date.now() - 86400000).toISOString(),
+                        transformations: 5,
+                        qualityChecks: 3,
+                        analysis: {
+                            rowCount: 15000,
+                            columnCount: 12,
+                            columns: ['customer_id', 'name', 'email', 'age', 'city', 'purchase_amount', 'purchase_date'],
+                            dataTypes: {
+                                'customer_id': 'integer',
+                                'name': 'string',
+                                'email': 'string',
+                                'age': 'integer',
+                                'city': 'string',
+                                'purchase_amount': 'float',
+                                'purchase_date': 'date'
+                            },
+                            nullValues: {
+                                'customer_id': { count: 0, percentage: '0.0' },
+                                'email': { count: 150, percentage: '1.0' },
+                                'age': { count: 75, percentage: '0.5' }
+                            },
+                            suggestedTransformations: [
+                                {
+                                    type: 'data_cleaning',
+                                    description: 'Remove duplicate customers and standardize email formats',
+                                    code: 'df.drop_duplicates(subset=["customer_id"]).assign(email=lambda x: x.email.str.lower())'
+                                },
+                                {
+                                    type: 'feature_engineering',
+                                    description: 'Calculate customer lifetime value',
+                                    code: 'df.groupby("customer_id")["purchase_amount"].sum().reset_index(name="clv")'
+                                }
+                            ],
+                            qualityChecks: [
+                                { type: 'completeness', description: 'Validate all required fields are present', severity: 'high' },
+                                { type: 'uniqueness', description: 'Ensure customer_id uniqueness', severity: 'high' },
+                                { type: 'validity', description: 'Validate email format and age ranges', severity: 'medium' }
+                            ],
+                            recommendations: [
+                                'Consider adding customer segmentation based on purchase behavior',
+                                'Implement real-time data quality monitoring',
+                                'Add data lineage tracking for audit purposes'
+                            ]
+                        },
+                        code: `# Demo Airflow Pipeline for Customer Analytics
+from airflow import DAG
+from airflow.operators.python_operator import PythonOperator
+from datetime import datetime, timedelta
+import pandas as pd
+
+default_args = {
+    'owner': 'dataops-ai',
+    'depends_on_past': False,
+    'start_date': datetime(2024, 1, 1),
+    'retries': 2,
+    'retry_delay': timedelta(minutes=5)
+}
+
+dag = DAG(
+    'customer-analytics-demo',
+    default_args=default_args,
+    description='AI-generated customer analytics pipeline',
+    schedule_interval='@daily',
+    catchup=False
+)
+
+def extract_customer_data(**context):
+    # Extract customer data from source
+    df = pd.read_csv('customer_data.csv')
+    return df.to_json()
+
+def transform_customer_data(**context):
+    # Apply transformations
+    ti = context['ti']
+    json_data = ti.xcom_pull(task_ids='extract_data')
+    df = pd.read_json(json_data)
+    
+    # Clean and transform data
+    df = df.drop_duplicates(subset=['customer_id'])
+    df['email'] = df['email'].str.lower()
+    df['clv'] = df.groupby('customer_id')['purchase_amount'].transform('sum')
+    
+    return df.to_json()
+
+# Define tasks
+extract_task = PythonOperator(
+    task_id='extract_data',
+    python_callable=extract_customer_data,
+    dag=dag
+)
+
+transform_task = PythonOperator(
+    task_id='transform_data',
+    python_callable=transform_customer_data,
+    dag=dag
+)
+
+extract_task >> transform_task`
+                    },
+                    {
+                        id: 'demo_2',
+                        name: 'sales-reporting-demo',
+                        framework: 'dbt',
+                        destination: 'bigquery',
+                        status: 'active',
+                        createdAt: new Date(Date.now() - 172800000).toISOString(),
+                        transformations: 7,
+                        qualityChecks: 4,
+                        analysis: {
+                            rowCount: 25000,
+                            columnCount: 8,
+                            columns: ['sale_id', 'product_id', 'quantity', 'price', 'sale_date', 'region', 'salesperson_id'],
+                            dataTypes: {
+                                'sale_id': 'integer',
+                                'product_id': 'string',
+                                'quantity': 'integer',
+                                'price': 'float',
+                                'sale_date': 'date',
+                                'region': 'string',
+                                'salesperson_id': 'integer'
+                            },
+                            nullValues: {
+                                'sale_id': { count: 0, percentage: '0.0' },
+                                'region': { count: 250, percentage: '1.0' },
+                                'salesperson_id': { count: 125, percentage: '0.5' }
+                            },
+                            suggestedTransformations: [
+                                {
+                                    type: 'aggregation',
+                                    description: 'Calculate monthly sales totals by region',
+                                    code: 'df.groupby([pd.Grouper(key="sale_date", freq="M"), "region"])["price"].sum()'
+                                }
+                            ],
+                            qualityChecks: [
+                                { type: 'range_validation', description: 'Ensure price and quantity are positive', severity: 'high' },
+                                { type: 'referential_integrity', description: 'Validate product_id references', severity: 'medium' }
+                            ],
+                            recommendations: [
+                                'Implement incremental loading for better performance',
+                                'Add sales trend analysis and forecasting',
+                                'Consider partitioning by sale_date for query optimization'
+                            ]
+                        },
+                        code: `-- Sales Reporting dbt Model
+{{ config(materialized='table', partition_by='sale_date') }}
+
+WITH sales_data AS (
+    SELECT 
+        sale_id,
+        product_id,
+        quantity,
+        price,
+        sale_date,
+        region,
+        salesperson_id,
+        quantity * price as total_amount
+    FROM {{ ref('raw_sales') }}
+    WHERE price > 0 AND quantity > 0
+),
+
+monthly_aggregates AS (
+    SELECT 
+        DATE_TRUNC('month', sale_date) as sale_month,
+        region,
+        COUNT(*) as total_sales,
+        SUM(total_amount) as revenue,
+        AVG(total_amount) as avg_sale_amount
+    FROM sales_data
+    GROUP BY 1, 2
+)
+
+SELECT * FROM monthly_aggregates`
+                    }
+                ];
+
+                currentPipelines = demoPipelines;
+                try {
+                    window.localStorage?.setItem('dataops_pipelines', JSON.stringify(demoPipelines));
+                } catch (e) {
+                    console.log('Demo data loaded in memory');
+                }
+            }
+        }
+
+        // Load demo data on first visit
+        setTimeout(() => {
+            loadDemoData();
+            if (currentTab === 'pipelines') {
+                displayPipelines();
+                updatePipelineStats();
+            }
+        }, 1000);
+
+        // Add some interactive features
+        document.addEventListener('keydown', function (e) {
+            // Ctrl/Cmd + K to focus search (future feature)
+            if ((e.ctrlKey || e.metaKey) && e.key === 'k') {
+                e.preventDefault();
+                // Focus search functionality would go here
+            }
+
+            // Escape to close modal
+            if (e.key === 'Escape') {
+                closeModal();
+            }
+        });
+
+        // Add smooth scrolling for better UX
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+    </script>
+</body>
+
+</html>

@@ -1,0 +1,21 @@
+created_at: 2025-05-24 23:39:45.782437
+destination_config:
+  database: analytics
+  host: localhost
+  table: processed_customers
+  type: postgresql
+destination_type: postgresql
+framework: airflow
+name: customer_analytics_pipeline
+quality_checks:
+- column: customer_id
+  type: unique
+- column: email
+  type: email_validation
+schedule: '@daily'
+source_config:
+  file_path: sample_customer_data.csv
+source_type: csv
+transformations:
+- subset: null
+  type: remove_duplicates
