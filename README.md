@@ -1,4 +1,4 @@
-# DataOps Pipeline Builder 🚀
+# DataOps Pipeline Builder ≡ƒÜÇ
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 [![Python 3.10+](https://img.shields.io/badge/Python-3.10+-3776AB.svg?logo=python&logoColor=white)](https://www.python.org/)
@@ -23,23 +23,23 @@ Modern data operations require bridging the gap between raw data ingestion, expl
 ## Architecture
 
 `
-┌─────────────────────────────────┐
-│     Visual Pipeline Canvas      │  (Interactive HTML5 / UI)
-└────────────────┬────────────────┘
-                 │ Exports JSON / Config
-                 ▼
-┌─────────────────────────────────┐
-│     DataOps Core Engine         │  (main1.py / Python Framework)
-│  • Schema Profiling             │
-│  • Outlier Detection (IsoForest)│
-│  • Clustering & Normalization   │
-└────────────────┬────────────────┘
-                 │ Compiles to
-         ┌───────┴────────┐
-         ▼                ▼
-┌────────────────┐  ┌─────────────────────────┐
-│ generated.yaml │  │ generated_dag.py (Airflow)│
-└────────────────┘  └─────────────────────────┘
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé     Visual Pipeline Canvas      Γöé  (Interactive HTML5 / UI)
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+                 Γöé Exports JSON / Config
+                 Γû╝
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé     DataOps Core Engine         Γöé  (main1.py / Python Framework)
+Γöé  ΓÇó Schema Profiling             Γöé
+Γöé  ΓÇó Outlier Detection (IsoForest)Γöé
+Γöé  ΓÇó Clustering & Normalization   Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö¼ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
+                 Γöé Compiles to
+         ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓö┤ΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+         Γû╝                Γû╝
+ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ  ΓöîΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÉ
+Γöé generated.yaml Γöé  Γöé generated_dag.py (Airflow)Γöé
+ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ  ΓööΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÇΓöÿ
 `
 
 ---
@@ -57,17 +57,17 @@ Modern data operations require bridging the gap between raw data ingestion, expl
 
 `	ext
 dataops-pipeline/
-├── index.html                           # Visual drag-and-drop pipeline designer UI
-├── LICENSE                              # MIT License
-├── README.md                            # Project documentation
-└── pipline-builder/
-    ├── main1.py                         # Core pipeline engine & Airflow generator
-    ├── customer-analyte.py              # ML analytics & outlier detection module
-    ├── dataops_config.json              # Sample pipeline configuration schema
-    ├── generated_dag.py                 # Compiled Apache Airflow DAG output
-    ├── generated_config.yaml            # Compiled YAML pipeline specification
-    ├── generated_requirements.txt       # Dependencies for pipeline runtimes
-    └── sample_customer_data.csv         # Benchmark dataset for validation
+Γö£ΓöÇΓöÇ index.html                           # Visual drag-and-drop pipeline designer UI
+Γö£ΓöÇΓöÇ LICENSE                              # MIT License
+Γö£ΓöÇΓöÇ README.md                            # Project documentation
+ΓööΓöÇΓöÇ pipline-builder/
+    Γö£ΓöÇΓöÇ main1.py                         # Core pipeline engine & Airflow generator
+    Γö£ΓöÇΓöÇ customer-analyte.py              # ML analytics & outlier detection module
+    Γö£ΓöÇΓöÇ dataops_config.json              # Sample pipeline configuration schema
+    Γö£ΓöÇΓöÇ generated_dag.py                 # Compiled Apache Airflow DAG output
+    Γö£ΓöÇΓöÇ generated_config.yaml            # Compiled YAML pipeline specification
+    Γö£ΓöÇΓöÇ generated_requirements.txt       # Dependencies for pipeline runtimes
+    ΓööΓöÇΓöÇ sample_customer_data.csv         # Benchmark dataset for validation
 `
 
 ---
@@ -105,4 +105,14 @@ Generated outputs will be written to generated_dag.py and generated_config.yaml.
 
 ## License
 
-This project is licensed under the MIT License — see the [LICENSE](LICENSE) file for details.
+This project is licensed under the MIT License ΓÇö see the [LICENSE](LICENSE) file for details.
+---
+
+## 💼 Looking for Data Engineering & Pipeline Consulting?
+
+I design robust data infrastructure and production-grade ML workflows:
+- **Airflow & Pipeline Orchestration:** Custom DAG architecture, ETL automation, and scheduler setups.
+- **Anomaly Detection & Analytics:** Embedded statistical and ML quality checks for enterprise data.
+
+👉 **[Book a 15-Minute Discovery Call](https://cal.com/abdul-moeez)**  
+📩 Or connect via **[LinkedIn](https://www.linkedin.com/in/abdul-moeez-nadeem-98a468205/)**
