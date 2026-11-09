@@ -106,6 +106,7 @@ Generated outputs will be written to generated_dag.py and generated_config.yaml.
 ## License
 
 This project is licensed under the MIT License ΓÇö see the [LICENSE](LICENSE) file for details.
+
 ---
 
 ## 💼 Looking for Data Engineering & Pipeline Consulting?
